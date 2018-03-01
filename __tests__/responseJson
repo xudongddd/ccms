@@ -1,0 +1,55 @@
+{
+	"powTotalHealthState": {
+		"powTotalNum": "3",
+		"powNum1Health": "1",
+		"powNum2Health": "1",
+		"powNum3Health": "1"
+	},
+	"powNumState":{
+        "odAuCMSVolt": "300",
+        "odAuCMSCur":"300",
+        "odAuCMSTemp": "69" ,
+        "odAuPeripheralStat": "1" ,
+        "time": "2017-09-15 09:52:23"
+	},
+	"modTotalState":{
+        "averageModVolt":"200",
+        "odMuThrModVolt":"230",
+        "odMuMinModVolt":"200",
+        "odMuHigherNbr":"5",
+        "time": "2017-09-15 09:52:23"
+        	},
+	"modTotalHealthState":{
+           "modTotalNum":"43",
+           "modNum1Health":"1",
+           "modNum2Health":"1",
+           "modNum3Health":"1",
+                   .
+                   .
+                   .
+           "modNum43Health":"2",
+	},
+	"modNumState":{
+            "odScuModVolt":"20",
+            "odScuCapTemp":"50",
+            "odScuPcbTemp":"63",
+            "block1Volt":"15",
+            "block2Volt":"15",
+            "block3Volt":"15",
+                    .
+                    .
+                    .
+            "block8Volt":"15",
+	}
+}
+
+/**
+实时数据请求逻辑，进入实时监测首页 =》服务端要给客户端发“powTotalState”=》点击i电源，进入电源监控页面 =》服务端给客户端发
+“powTotalState”+i的“powNumState”=》用户点击模组监控 =》 服务端要给客户端发送“powTotalState”+i的“powNumState”
++i电源的“modToatalState”+ i电源的“modToatalHealthState” =》 用户点击k模组 =》 服务端要给客户端发送“powTotalState”
++i的“powNumState”+i电源的“modToatalState”+ i电源的“modToatalHealthState”+i电源的k模组的“modNumState”。
+
+
+如果用户返回到实时监测首页，重新点击了另一个电源j，则清除powNumState，modToatalState，modToatalHealthState，modNumState的缓存，重复
+上面的步骤。
+**/
