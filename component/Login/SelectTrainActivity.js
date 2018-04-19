@@ -64,7 +64,7 @@ export default class RootComponent extends Component {
                                activeOpacity={0.8}
                            >
                                 <Text  style={styles.udpDataText}>
-                                    {msg.carNum}次列车
+                                    {msg.TrainNumber}次列车
                                 </Text>
                            </TouchableOpacity>
                         );
@@ -74,11 +74,13 @@ export default class RootComponent extends Component {
         );
     }
     componentDidMount(){
-        let sendMsg = 'getDate';
+        udpStore.udpgetDataArr.splice(0,udpStore.udpgetDataArr.length)
+        let sendMsg = 'getData';
         let da = this._toByteArray(sendMsg);
-        udpStore.udpSocket.send(da,0,da.length,7747,'255.255.255.255', (err)=> {
+        udpStore.udpSocket.send(da,0,da.length,88,'255.255.255.255', (err)=> {
             if (err) throw err
         })
+
     }
     _toByteArray = (obj) => {
         let uint = new Uint8Array(obj.length);
@@ -90,7 +92,7 @@ export default class RootComponent extends Component {
 
 
     _clickItem = (msg)=> {
-        Alert.alert(msg.carNum+"车的Ip地址是："+msg.Ip)
+        Alert.alert(msg.TrainNumber+"车的Ip地址是："+msg.IP)
     }
 }
 

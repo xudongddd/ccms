@@ -18,6 +18,7 @@ export default class UdpStore{
     udpSocket:Object
 
     constructor(){
+
         this.udpSocket = dgram.createSocket('udp4')
         this.udpSocket.bind(60000,(err)=>{if(err) throw err;})
 

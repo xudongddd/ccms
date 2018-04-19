@@ -1,5 +1,6 @@
 /**
  * Created by 许东 on 2018/1/20.
+ * 电源监控
  */
 
 import React, { Component } from 'react';
@@ -15,13 +16,16 @@ import {
     TouchableHighlight,
     Dimensions
 } from 'react-native';
+
 let {width,height} = Dimensions.get('window')
 
 import config from '../../Util/config'
+import {observer} from 'mobx-react/native'
+import websocketSingletonH from '../../MobxStore/websocketSingleton'
+import Echarts from 'native-echarts'
 
 
-
-
+@observer
 export default class PowerView extends Component {
     static navigationOptions =({navigation})=>({
         headerRight:<View/>,
@@ -39,7 +43,38 @@ export default class PowerView extends Component {
         headerTintColor:'#fff'
     })
 
+
     render() {
+
+        let data = websocketSingletonH.dataSS
+        console.log("ppp"+data[14])
+        option = {
+            title: {
+                text: '电压'
+            },
+            xAxis: {
+                type: 'time',
+                splitLine: {
+                    show: true
+                }
+            },
+            yAxis: {
+                type: 'value',
+                boundaryGap: [0, '100%'],
+                splitLine: {
+                    show: true
+                }
+            },
+            series: [{
+                name: '电压',
+                type: 'line',
+                showSymbol: false,
+                hoverAnimation: false,
+                data: data,
+                smooth:true
+            }]
+        };
+
         const {navigate} = this.props.navigation
         let powNum = this.props.navigation.state.params.powNum
         return (
@@ -49,21 +84,35 @@ export default class PowerView extends Component {
                     <TouchableOpacity
                         style={styles.modView}
                         activeOpacity={0.2}
-                        onPress={()=>this._clickModView(navigate,powNum)}
-                    >
+                        onPress={()=>this._clickModView(navigate,powNum)}>
                         <Text style={styles.modText}>模组监控</Text>
                         <Image
                         style={{marginLeft:234}}
-                        source={require('./img/right2arrow.png')}
-                        />
-
+                        source={require('./img/right2arrow.png')}/>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.barLine2}/>
                 <View style={styles.PowState}>
 
+                    {/*{websocketSingletonH.powTotalHealthState.map((msg, index) => {*/}
+                        {/*return (*/}
+                            {/*<View key = {index}>*/}
+                                {/*<Text*/}
+                                    {/*style = {{fontSize:16,color:'#fff'}}>*/}
+                                    {/*返回结果：{msg.addr.city}*/}
+                                    {/*电源：{msg.addr.province}*/}
+                                    {/*模组：{msg.age}*/}
+                                {/*</Text>*/}
+                                {/*<Text style = {{fontSize:16,color:'#fff'}}>*/}
+                                    {/*是否block：{msg.name}*/}
+                                {/*</Text>*/}
+                            {/*</View>*/}
+                        {/*);*/}
+                    {/*})}*/}
+                    {/*测试echarts start*/}
+                    <Echarts option = {option } height={250} />
+                    {/*测试echarts end*/}
                 </View>
-
             </View>
         );
     }
@@ -71,7 +120,14 @@ export default class PowerView extends Component {
     _clickModView = (navigate,powNum) => {
         navigate('ModView',{powNum:powNum})
     }
+  
+    componentWillUnmount(){
+         websocketSingletonH.socket.send("#")
+    }
 
+    componentDidMount(){
+        websocketSingletonH.socket.send("RTMonitor")
+    }
 }
 const styles = StyleSheet.create({
     container: {
